@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student Majors</title>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+
+    <style>
+        body { font-family: Arial; text-align: center; }
+        table { margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 8px 12px; }
+        button { margin: 10px; padding: 10px 15px; }
+    </style>
+</head>
+
+
+
+<body>
+
+    <h1>Select a Major</h1>
+
+    <button onclick="loadData('CIT')">CIT Majors</button>
+    <button onclick="loadData('BUS')">Business Majors</button>
+
+    <h2>We filter our dataset by major</h2>
+  
+    <div id="output"></div>
+
+    
+    <script id="table-template" type="text/x-handlebars-template">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Major</th>
+                <th>Midterm</th>
+                <th>Final</th>
+            </tr>
+
+            {{#each students}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{major}}</td>
+                <td>{{midterm}}</td>
+                <td>{{final}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </script>
+
+
+
+    <script>
+        async function loadData(majorType) {
+            try {
+                
+                const response = await fetch('cit5students.json');
+                const data = await response.json(); 
+
+                
+                const filtered = data.filter(student => student.major === majorType);
+
+                
+                const source = document.getElementById('table-template').innerHTML;
+                const template = Handlebars.compile(source);
+
+                
+                const html = template({ students: filtered });
+                document.getElementById('output').innerHTML = html;
+
+            } catch (error) {
+                console.error("Error loading JSON:", error);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
